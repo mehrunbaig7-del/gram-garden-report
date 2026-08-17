@@ -43,7 +43,7 @@ export type AuditResponse = {
 export function extractUsername(url: string): string {
   const cleaned = url.trim().replace(/\/+$/, "");
   const match = cleaned.match(/instagram\.com\/([^/?#]+)/i);
-  if (match) return match[1];
+  if (match?.[1]) return match[1];
   return cleaned.replace(/^@/, "") || "your account";
 }
 
