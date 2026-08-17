@@ -51,22 +51,23 @@ export function extractUsername(url: string): string {
 }
 
 export async function analyzeInstagramProfile(instagramUrl: string): Promise<AuditResponse> {
-  const endpoint = import.meta.env["VITE_AUDIT_WEBHOOK_URL"] as string | undefined;
+  const endpoint =
+    (import.meta.env["VITE_AUDIT_WEBHOOK_URL"] as string | undefined) || DEFAULT_WEBHOOK_URL;
   const username = extractUsername(instagramUrl);
 
-  if (endpoint) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ instagram_url: instagramUrl }),
-    });
-    if (!res.ok) throw new Error(`Audit failed (${res.status})`);
-    const data = (await res.json()) as AuditResponse;
-    return normalize(data, instagramUrl, username);
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ instagram_url: instagramUrl }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Audit failed (${res.status})${text ? `: ${text}` : ""}`);
   }
 
-  await new Promise((r) => setTimeout(r, 3200));
-  return normalize(mockAudit(username), instagramUrl, username);
+  const data = (await res.json()) as AuditResponse;
+  return normalize(data, instagramUrl, username);
 }
 
 function normalize(data: AuditResponse, url: string, username: string): AuditResponse {
