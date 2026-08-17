@@ -1,8 +1,11 @@
 // API service layer for the Instagram audit.
 //
-// To connect the real backend (e.g. an n8n webhook), set
-// VITE_AUDIT_WEBHOOK_URL in the project env. When it is absent we fall back to
-// mock data so the UI stays fully explorable.
+// Calls the n8n webhook by default. You can override the endpoint by setting
+// VITE_AUDIT_WEBHOOK_URL in the project env; when that is absent we fall back to
+// mock data so the UI stays fully explorable during development.
+
+const DEFAULT_WEBHOOK_URL =
+  "https://mehruu.app.n8n.cloud/webhook-test/instagram-audit";
 
 export type AuditItem = {
   post?: string;
