@@ -4,7 +4,8 @@
 const DEFAULT_URL = "https://mehruu.app.n8n.cloud/webhook/instagram-audit";
 
 export type AuditFetchResult =
-  | { ok: true; payload: unknown }
+  /** Raw JSON text from the workflow; parsed on the client. */
+  | { ok: true; payloadJson: string }
   | { ok: false; kind: "network" | "upstream"; message: string };
 
 export async function fetchAuditFromN8n(username: string): Promise<AuditFetchResult> {
@@ -46,7 +47,8 @@ export async function fetchAuditFromN8n(username: string): Promise<AuditFetchRes
   }
 
   try {
-    return { ok: true, payload: JSON.parse(text) as unknown };
+    JSON.parse(text);
+    return { ok: true, payloadJson: text };
   } catch {
     return { ok: false, kind: "upstream", message: "The analysis service did not return JSON." };
   }
