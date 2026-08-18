@@ -41,7 +41,7 @@ export type PatternGroup = {
 
 export type TopPost = {
   id: string;
-  rank: number | null;
+  rank: number;
   cover_image: string | null;
   url: string | null;
   performance_score: number | null;
