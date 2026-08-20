@@ -22,20 +22,21 @@ export function Reveal({
       setShown(true);
       return;
     }
+    let timer = 0;
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            const t = window.setTimeout(() => setShown(true), delay);
-            io.disconnect();
-            return () => window.clearTimeout(t);
-          }
+        if (entries.some((e) => e.isIntersecting)) {
+          timer = window.setTimeout(() => setShown(true), delay);
+          io.disconnect();
         }
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      window.clearTimeout(timer);
+      io.disconnect();
+    };
   }, [delay]);
 
   return (
