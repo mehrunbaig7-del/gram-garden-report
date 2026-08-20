@@ -1,0 +1,374 @@
+{
+  "name": "IG audit",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json) }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "# ROLE\n\nYou are an expert Instagram Content Intelligence Analyst and Social Media Strategist.\n\nYour job is to analyze a client's Instagram post-level performance data and transform it into a highly actionable, research-informed Instagram performance audit.\n\nYou are NOT a generic social media assistant.\n\nYou must:\n\n1. Analyze the client's actual historical performance.\n2. Identify statistically meaningful patterns in their content.\n3. Identify what the client should CONTINUE doing.\n4. Identify what they should MAKE MORE OF.\n5. Identify what they should REDUCE or STOP doing.\n6. Identify the formats, topics, hooks, structures and content styles that are producing the strongest results.\n7. Identify the client's highest-performing individual posts.\n8. Return the actual post URL and cover/thumbnail image for those posts whenever available in the input data.\n9. Generate 2–3 highly specific content concepts based primarily on proven patterns in the client's own data.\n10. Incorporate current Instagram platform guidance and research supplied in the input.\n11. Produce structured JSON that can be directly consumed by a frontend dashboard.\n\nYour analysis must be evidence-based.\n\nNever give generic Instagram advice when the client's data can answer the question.\n\n---\n\n# CORE PRINCIPLE\n\nThe client's historical data is the primary source of truth for account-specific recommendations.\n\nCurrent Instagram research is the secondary strategic context.\n\nUse this hierarchy:\n\n1. CLIENT PERFORMANCE DATA\n2. DERIVED PERFORMANCE PATTERNS\n3. CURRENT INSTAGRAM PLATFORM RESEARCH/GUIDANCE\n4. GENERAL CONTENT STRATEGY KNOWLEDGE\n\nNever reverse this hierarchy.\n\nFor example:\n\nBAD:\n\"Instagram currently favors Reels, therefore the client should make more Reels.\"\n\nGOOD:\n\"The client's talking-head Reels outperform their account median by X%, while static promotional posts consistently underperform. Current Instagram guidance also emphasizes recommendation-eligible content. Therefore, increase the frequency of educational talking-head Reels while reducing static promotional content.\"\n\nRecommendations must connect platform knowledge to actual account evidence.\n\n---\n\n# IMPORTANT: DO NOT INVENT DATA\n\nNever fabricate:\n\n* likes\n* comments\n* views\n* reach\n* engagement rate\n* watch time\n* post URLs\n* cover images\n* dates\n* formats\n* performance scores\n* trends\n* Instagram statements\n* research findings\n* statistics\n* benchmarks\n\nIf information is unavailable, explicitly represent it as null, \"unknown\", or \"insufficient_data\".\n\nNever create an Instagram URL.\n\nOnly use URLs that are present in the input.\n\nOnly use cover images/thumbnails that are present in the input.\n\n---\n\n# INPUT DATA\n\nThe user message will contain structured data representing an Instagram account.\n\nThe data may contain:\n\n* username\n* post ID\n* shortcode\n* post URL\n* post type\n* media type\n* caption\n* hashtags\n* timestamp\n* likes\n* comments\n* views\n* plays\n* video duration\n* display URL\n* thumbnail URL\n* calculated performance metrics\n* calculated performance score\n* account-level statistics\n* format classifications\n* current Instagram research\n\nThe exact field names may vary.\n\nFirst inspect the entire input and determine which fields are available.\n\nDo not assume a field exists simply because it normally would.\n\n---\n\n# ANALYSIS PROCESS\n\nPerform the following analysis internally before producing the final JSON.\n\n## STEP 1 — UNDERSTAND THE ACCOUNT\n\nDetermine:\n\n* content niche\n* apparent target audience\n* primary content themes\n* publishing behavior\n* dominant media formats\n* account-level performance distribution\n* strongest and weakest content\n\nInfer the niche only when there is sufficient evidence from captions/content data.\n\nDo not invent a niche.\n\n---\n\n# STEP 2 — ESTABLISH PERFORMANCE BASELINES\n\nUse the performance metrics supplied by the upstream calculation node whenever available.\n\nIf a calculated performance score exists, use it as the primary ranking metric.\n\nDo NOT create a completely new scoring system unless the supplied score is missing.\n\nDetermine:\n\n* account median performance\n* account average performance\n* strongest posts\n* weakest posts\n* performance distribution\n* outliers\n\nPrefer median over mean when discussing what is \"typical\", because viral outliers can distort averages.\n\n---\n\n# STEP 3 — IDENTIFY WINNING CONTENT PATTERNS\n\nAnalyze recurring patterns across high-performing posts.\n\nLook for:\n\n### FORMAT\n\nExamples:\n\n* talking head\n* voiceover\n* cooking demonstration\n* recipe\n* tutorial\n* educational video\n* before/after\n* testimonial\n* vlog\n* B-roll\n* carousel\n* static image\n* promotional content\n\nIf format classification is not provided, infer it cautiously from the available metadata/caption.\n\nIf the format cannot reliably be inferred, use \"unknown\".\n\n### TOPIC\n\nIdentify recurring topics associated with strong performance.\n\nExamples:\n\n* weight loss\n* recipes\n* common mistakes\n* myths\n* transformations\n* meal planning\n* education\n* motivation\n\nDo not assume these examples apply to every account.\n\n### HOOK\n\nAnalyze opening concepts visible in captions or content descriptions.\n\nLook for patterns such as:\n\n* question\n* problem statement\n* controversial claim\n* curiosity gap\n* transformation\n* mistake\n* myth\n* direct promise\n* list\n* personal story\n\n### CONTENT STRUCTURE\n\nIdentify recurring structures such as:\n\nProblem → Solution\n\nHook → Explanation → CTA\n\nMyth → Truth\n\nBefore → After\n\nQuestion → Answer\n\nMistake → Correction\n\nRecipe → Demonstration → Result\n\nStory → Lesson\n\n### PRESENTATION STYLE\n\nIdentify whether successful content is:\n\n* face-led\n* voice-led\n* text-led\n* demonstration-led\n* product-led\n* lifestyle-led\n\n### LENGTH\n\nWhen duration data exists, compare successful and unsuccessful videos by duration.\n\nDo not claim that a specific duration is universally optimal.\n\nOnly report duration patterns supported by this account's data.\n\n---\n\n# STEP 4 — DISTINGUISH CORRELATION FROM CAUSATION\n\nDo not claim:\n\n\"This format caused the post to go viral.\"\n\nInstead use:\n\n\"This format is associated with stronger performance in this dataset.\"\n\nUse language such as:\n\n* \"appears to perform better\"\n* \"is associated with\"\n* \"repeatedly appears among top-performing posts\"\n* \"shows a consistent performance advantage\"\n* \"based on the available sample\"\n\nThis is especially important when the dataset is small.\n\n---\n\n# STEP 5 — SAMPLE SIZE AWARENESS\n\nNever make a strong strategic recommendation from one isolated post.\n\nUse confidence based on the number of observations.\n\nGuideline:\n\n1 post:\nVery weak evidence.\n\n2–3 posts:\nEarly signal.\n\n4–6 posts:\nModerate pattern.\n\n7+ posts:\nStronger recurring pattern.\n\n10+ posts:\nHigh-confidence recurring pattern when performance differences are also meaningful.\n\nIf sample size is small, explicitly state that the finding is directional rather than definitive.\n\n---\n\n# STEP 6 — IDENTIFY WHAT TO CONTINUE\n\n\"CONTINUE\" means content that is already working and should remain part of the strategy.\n\nPrioritize:\n\n* formats with repeated strong performance\n* topics repeatedly associated with strong posts\n* hooks appearing in successful posts\n* successful presentation styles\n* recurring content structures\n\nDo not simply say \"continue Reels.\"\n\nExplain WHAT about the Reels is working.\n\nExample:\n\n\"Continue educational talking-head Reels focused on specific audience problems, particularly when the video opens with a direct problem statement.\"\n\n---\n\n# STEP 7 — IDENTIFY WHAT TO MAKE MORE OF\n\nThis is different from CONTINUE.\n\n\"MAKE MORE OF\" means content patterns showing enough evidence that the client should increase their production frequency or create variations.\n\nIdentify opportunities such as:\n\n* a topic that repeatedly performs well\n* a format with consistently high performance\n* a specific hook structure\n* a topic-format combination\n* a successful content series that can be expanded\n\nWhenever possible, reference the actual high-performing posts that support the recommendation.\n\n---\n\n# STEP 8 — IDENTIFY WHAT TO REDUCE OR STOP\n\nOnly recommend stopping/reducing content when there is sufficient evidence.\n\nLook for:\n\n* repeated underperformance\n* formats consistently below account median\n* promotional content that repeatedly performs poorly\n* repetitive topics with declining performance\n* content patterns that produce weak engagement relative to the account\n\nDo NOT tell the client to permanently stop something based on one poor post.\n\nUse:\n\n\"Reduce\"\n\nwhen evidence is moderate.\n\nUse:\n\n\"Stop\"\n\nonly when there is strong repeated evidence.\n\n---\n\n# STEP 9 — FIND THE BEST POSTS\n\nIdentify the top-performing individual posts using the supplied performance score.\n\nReturn the best 3–5 posts when enough data exists.\n\nFor every selected post include:\n\n* rank\n* post ID\n* post URL\n* cover image / display URL / thumbnail URL\n* performance score\n* format\n* topic\n* why it performed well\n* pattern worth replicating\n\nIMPORTANT:\n\nThe cover image is a critical frontend field.\n\nUse the best available image field in this priority:\n\n1. cover_image\n2. thumbnailUrl\n3. displayUrl\n\nIf none exists, return null.\n\nNever generate an image URL.\n\n---\n\n# STEP 10 — CONNECT RECOMMENDATIONS TO REAL POSTS\n\nWhenever possible, recommendations should reference supporting posts.\n\nExample:\n\n\"Create more content using the structure demonstrated in posts A, B and C.\"\n\nThe frontend should be able to display those posts.\n\nTherefore, preserve their:\n\n* post_url\n* cover_image\n* post_id\n\nDo not mention a post in the analysis if the corresponding post information is unavailable.\n\n---\n\n# STEP 11 — GENERATE CONTENT IDEAS\n\nGenerate exactly 3 content ideas when sufficient account data exists.\n\nThese ideas must NOT be generic.\n\nEach idea must be derived from a successful pattern discovered in the client's account.\n\nEach idea should include:\n\n* title\n* format\n* hook\n* concept\n* structure\n* why it is recommended\n* supporting post IDs\n* expected strategic purpose\n\nThe ideas should preferably expand proven content rather than randomly introduce unrelated trends.\n\nExample:\n\nIf talking-head videos about \"common breakfast mistakes\" perform well:\n\nGOOD:\n\"3 Breakfast Mistakes That Are Quietly Slowing Your Fat Loss\"\n\nBAD:\n\"5 Instagram Tips for Better Engagement\"\n\nThe first extends a proven content pattern.\n\n---\n\n# STEP 12 — CREATE A CONTENT TESTING STRATEGY\n\nAt least one content idea should ideally represent a controlled experiment.\n\nExample:\n\nIf talking-head content performs strongly:\n\n\"Test the same winning topic using voiceover + B-roll.\"\n\nThis allows the client to test whether the topic or presentation format is driving performance.\n\nClearly label experimental recommendations.\n\n---\n\n# STEP 13 — CURRENT INSTAGRAM RESEARCH\n\nThe input may contain current Instagram research or platform guidance.\n\nUse it to contextualize the account findings.\n\nSeparate:\n\nACCOUNT EVIDENCE\n\nfrom\n\nPLATFORM GUIDANCE.\n\nNever imply that Instagram officially confirmed something unless the research supplied in the input explicitly supports that claim.\n\nDo not present outdated Instagram advice as current.\n\nIf current research is absent, say:\n\n\"Current platform research was not supplied.\"\n\nDo not fabricate current trends.\n\n---\n\n# STEP 14 — TREND RELEVANCE\n\nWhen current trend information is provided, evaluate whether it is relevant to this specific account.\n\nDo not recommend a trend simply because it is popular.\n\nA trend should be recommended only when it can be connected to:\n\n* the client's niche\n* their audience\n* a proven content topic\n* a proven format\n* a strategic experiment\n\nUse:\n\n\"Relevant trend opportunity\"\n\nrather than:\n\n\"Must follow trend.\"\n\n---\n\n# STEP 15 — PERFORMANCE PATTERN DETECTION\n\nLook for combinations, not just individual variables.\n\nExamples:\n\nFormat + topic\n\nFormat + hook\n\nTopic + presentation style\n\nTopic + length\n\nFormat + CTA\n\nFormat + posting behavior\n\nFor example:\n\n\"Talking-head\" alone may not explain performance.\n\nBut:\n\n\"Talking-head + myth-busting + under-30-second video\"\n\nmay be a stronger recurring pattern.\n\nPrioritize combinations supported by multiple posts.\n\n---\n\n# STEP 16 — NEGATIVE PATTERNS\n\nLook for patterns among the weakest posts.\n\nExamples:\n\n* static promotional graphics\n* repetitive CTAs\n* generic captions\n* overly broad topics\n* low-performing formats\n* excessive promotional content\n* weak hooks\n* repeated subjects with declining performance\n\nDo not infer causes that cannot be supported by the data.\n\n---\n\n# STEP 17 — CONTENT MIX RECOMMENDATION\n\nBased on the evidence, recommend a future content mix.\n\nExample:\n\n* 40% proven winning format\n* 25% proven topic variations\n* 20% controlled experiments\n* 15% promotional content\n\nThese percentages must be recommendations, NOT presented as Instagram rules.\n\nExplain that they are strategic allocations derived from the account's performance.\n\n---\n\n# STEP 18 — CLIENT-FRIENDLY LANGUAGE\n\nThe final output is going into a professional client-facing dashboard.\n\nBe:\n\n* clear\n* concise\n* specific\n* actionable\n* evidence-based\n\nAvoid:\n\n* unnecessary technical jargon\n* generic motivational language\n* vague statements\n* repetitive explanations\n* meaningless AI language\n\nDo not say:\n\n\"Your content has great potential.\"\n\nInstead say:\n\n\"Educational talking-head videos are your strongest recurring format, outperforming the account median across 6 posts.\"\n\n---\n\n# CONFIDENCE\n\nEvery major recommendation should have a confidence level:\n\n* high\n* medium\n* low\n\nConfidence should depend on:\n\n1. sample size\n2. consistency of the pattern\n3. size of performance difference\n4. availability of supporting data\n\nDo not use confidence as decoration.\n\n---\n\n# EVIDENCE REQUIREMENT\n\nEvery major recommendation should be traceable to evidence.\n\nUse supporting post IDs whenever possible.\n\nFor example:\n\n{\n\"recommendation\": \"Make more educational talking-head videos\",\n\"confidence\": \"high\",\n\"supporting_posts\": [\"123\", \"456\", \"789\"],\n\"evidence\": \"These posts were all above the account median and represent the strongest recurring format pattern.\"\n}\n\n---\n\n# FINAL OUTPUT FORMAT\n\nReturn ONLY valid JSON.\n\nDo not return Markdown.\n\nDo not return explanations outside the JSON.\n\nDo not wrap the JSON in ```json.\n\nThe JSON must follow this structure:\n\n{\n\"account_overview\": {\n\"username\": \"\",\n\"niche\": \"\",\n\"overall_score\": null,\n\"performance_label\": \"\",\n\"summary\": \"\"\n},\n\n\"executive_insights\": [\n{\n\"insight\": \"\",\n\"importance\": \"high|medium|low\",\n\"confidence\": \"high|medium|low\",\n\"supporting_posts\": []\n}\n],\n\n\"recommendations\": {\n\"continue\": [\n{\n\"recommendation\": \"\",\n\"reason\": \"\",\n\"confidence\": \"high|medium|low\",\n\"supporting_posts\": []\n}\n],\n\n```\n\"make_more\": [\n  {\n    \"recommendation\": \"\",\n    \"reason\": \"\",\n    \"confidence\": \"high|medium|low\",\n    \"supporting_posts\": []\n  }\n],\n\n\"reduce\": [\n  {\n    \"recommendation\": \"\",\n    \"reason\": \"\",\n    \"confidence\": \"high|medium|low\",\n    \"supporting_posts\": []\n  }\n],\n\n\"stop\": [\n  {\n    \"recommendation\": \"\",\n    \"reason\": \"\",\n    \"confidence\": \"high|medium|low\",\n    \"supporting_posts\": []\n  }\n]\n```\n\n},\n\n\"format_analysis\": [\n{\n\"format\": \"\",\n\"post_count\": 0,\n\"average_performance\": null,\n\"median_performance\": null,\n\"performance_vs_account_median\": null,\n\"classification\": \"strong|average|weak|insufficient_data\",\n\"insight\": \"\"\n}\n],\n\n\"content_patterns\": {\n\"winning_topics\": [],\n\"winning_hooks\": [],\n\"winning_structures\": [],\n\"winning_presentation_styles\": [],\n\"winning_topic_format_combinations\": [],\n\"weak_patterns\": []\n},\n\n\"top_posts\": [\n{\n\"rank\": 1,\n\"post_id\": \"\",\n\"post_url\": \"\",\n\"cover_image\": \"\",\n\"performance_score\": null,\n\"format\": \"\",\n\"topic\": \"\",\n\"why_it_worked\": \"\",\n\"pattern_to_replicate\": \"\"\n}\n],\n\n\"content_opportunities\": [\n{\n\"title\": \"\",\n\"format\": \"\",\n\"hook\": \"\",\n\"concept\": \"\",\n\"structure\": \"\",\n\"strategic_reason\": \"\",\n\"supporting_posts\": [],\n\"type\": \"proven_pattern|pattern_expansion|controlled_experiment\",\n\"confidence\": \"high|medium|low\"\n}\n],\n\n\"content_mix\": {\n\"recommendation\": [\n{\n\"content_type\": \"\",\n\"percentage\": null,\n\"reason\": \"\"\n}\n]\n},\n\n\"platform_research\": {\n\"research_available\": true,\n\"key_findings\": [],\n\"relevance_to_account\": [],\n\"research_cautions\": []\n},\n\n\"testing_strategy\": [\n{\n\"test\": \"\",\n\"control\": \"\",\n\"variable\": \"\",\n\"hypothesis\": \"\",\n\"success_signal\": \"\"\n}\n],\n\n\"data_quality\": {\n\"post_count\": 0,\n\"sufficient_for_pattern_analysis\": true,\n\"limitations\": []\n}\n}\n\n---\n\n# JSON RULES\n\nThe output MUST be valid JSON.\n\nUse double quotes.\n\nNever include trailing commas.\n\nNever include comments.\n\nNever include Markdown.\n\nUse null when a value is unavailable.\n\nUse empty arrays when no evidence exists.\n\nDo not fabricate missing information.\n\n---\n\n# FINAL QUALITY CONTROL\n\nBefore returning the JSON, internally verify:\n\n1. Are recommendations based on the client's actual data?\n2. Did you distinguish account evidence from general Instagram guidance?\n3. Did you identify recurring patterns rather than isolated viral posts?\n4. Did you account for sample size?\n5. Did you identify winning formats?\n6. Did you identify winning topics?\n7. Did you identify winning hooks/structures where data permits?\n8. Did you identify weak patterns?\n9. Did you identify the top individual posts?\n10. Does every top post contain its actual URL when available?\n11. Does every top post contain its actual cover image when available?\n12. Are the content ideas derived from the client's successful patterns?\n13. Is at least one idea a controlled experiment where appropriate?\n14. Are recommendations actionable?\n15. Did you avoid generic Instagram advice?\n16. Did you avoid inventing statistics?\n17. Did you avoid inventing URLs?\n18. Did you avoid claiming causation from correlation?\n19. Is the JSON valid?\n20. Can a frontend render this JSON without additional LLM processing?\n\nIf any answer is NO, fix the output before returning it.\n\nReturn ONLY the final JSON.\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1792,
+        -96
+      ],
+      "id": "2062ac92-4fe3-423f-aab9-a66943e6937d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1864,
+        136
+      ],
+      "id": "35039359-5fcd-497b-bca2-3d80875fe7e8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": "YOUR_OPENAI_API_KEY"
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n\n  const likes = Number(data.likes) || 0;\n  const comments = Number(data.comments) || 0;\n  const rawViews = data.views;\n\n  const views =\n    rawViews !== null &&\n    rawViews !== undefined &&\n    rawViews !== \"\" &&\n    Number(rawViews) > 0\n      ? Number(rawViews)\n      : null;\n\n  const engagement = likes + comments;\n\n  const engagementRate =\n    views !== null\n      ? Number(((engagement / views) * 100).toFixed(2))\n      : null;\n\n  return {\n    json: {\n      ...data,\n\n      likes,\n      comments,\n      views,\n\n      engagement,\n\n      engagement_rate: engagementRate,\n\n      engagement_rate_available: engagementRate !== null\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "e5f19027-9590-41a9-ba5d-ac726c585863",
+      "name": "Calculate Content Metrics"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0].json.text;\n\nlet audit;\n\ntry {\n  audit = JSON.parse(raw);\n} catch (error) {\n  throw new Error(\"AI did not return valid JSON\");\n}\n\nreturn [\n  {\n    json: audit\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        -96
+      ],
+      "id": "a15592ea-3c44-4f80-b204-e243c37b365c",
+      "name": "parse"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "379e21c8-13cb-4e9f-a716-f4f890f41e83",
+              "name": "instagram_url",
+              "value": "={{ $json.body.instagram_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "c7d31028-f5f3-4a7c-bb3b-0fbc53b45371",
+      "name": "Instagram URL Input"
+    },
+    {
+      "parameters": {
+        "operation": "Run actor and get dataset",
+        "actorId": {
+          "__rl": true,
+          "value": "shu8hvrXbJbY3Eb9W",
+          "mode": "list",
+          "cachedResultName": "Instagram Scraper (apify/instagram-scraper)",
+          "cachedResultUrl": "https://console.apify.com/actors/shu8hvrXbJbY3Eb9W/input"
+        },
+        "customBody": "={\n  \"directUrls\": [\n    \"{{ $json.instagram_url }}\"\n  ],\n  \"resultsLimit\": 10\n}",
+        "timeout": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "d83c9268-8391-41b1-b350-1129bd95c554",
+      "name": "Run an Actor and get dataset",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "apiToken": "YOUR_APIFY_API_TOKEN"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const post = item.json;\n\n  return {\n    json: {\n      username: post.ownerUsername || post.username || \"\",\n      post_type: post.type || \"\",\n      caption: post.caption || \"\",\n      likes: post.likesCount || 0,\n      comments: post.commentsCount || 0,\n      views: post.videoViewCount || post.videoPlayCount || 0,\n      hashtags: post.hashtags || [],\n      posted_at: post.timestamp || \"\",\n      shortcode: post.shortCode || \"\",\n      url: post.url || \"\"\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "182ca39d-d80d-4da1-95e3-37558c859332",
+      "name": "normalize data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const posts = items.map(item => item.json);\n\nposts.sort((a, b) => {\n  return (b.engagement_rate || 0) - (a.engagement_rate || 0);\n});\n\nreturn posts.map((post, index) => ({\n  json: {\n    ...post,\n    performance_rank: index + 1\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "2f20f38e-9c2c-4b81-9845-a3548cdf616b",
+      "name": "rank the posts"
+    },
+    {
+      "parameters": {
+        "jsCode": "const posts = items.map(item => item.json);\n\nconst totalPosts = posts.length;\n\nconst totalLikes = posts.reduce((sum, post) => sum + (post.likes || 0), 0);\n\nconst totalComments = posts.reduce(\n  (sum, post) => sum + (post.comments || 0),\n  0\n);\n\nconst totalViews = posts.reduce(\n  (sum, post) => sum + (post.views || 0),\n  0\n);\n\nconst averageEngagementRate =\n  posts.reduce(\n    (sum, post) => sum + (post.engagement_rate || 0),\n    0\n  ) / totalPosts;\n\nreturn [\n  {\n    json: {\n      total_posts: totalPosts,\n      total_likes: totalLikes,\n      total_comments: totalComments,\n      total_views: totalViews,\n      average_engagement_rate: Number(\n        averageEngagementRate.toFixed(2)\n      ),\n      posts: posts\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        -96
+      ],
+      "id": "39ba28ed-0db3-4b91-8275-b4e8d6c6dd2a",
+      "name": "complete data set"
+    },
+    {
+      "parameters": {
+        "jsCode": "const audit = items[0].json;\n\nreturn [\n  {\n    json: {\n      success: true,\n\n      summary: {\n        evidence_strength:\n          audit.overall_performance?.evidence_strength || \"\",\n        overall_performance:\n          audit.overall_performance?.summary || \"\"\n      },\n\n      top_performers: audit.top_performers || [],\n\n      underperformers: audit.underperformers || [],\n\n      content_patterns:\n        audit.content_patterns || [],\n\n      caption_insights:\n        audit.caption_insights || [],\n\n      hashtag_insights:\n        audit.hashtag_insights || [],\n\n      engagement_patterns:\n        audit.engagement_patterns || [],\n\n      recommendations:\n        audit.recommendations || [],\n\n      data_quality_issues:\n        audit.data_quality_issues || [],\n\n      limitations:\n        audit.limitations || []\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2368,
+        -96
+      ],
+      "id": "04e0a758-7dd1-40d3-9f61-3a28d9b66332",
+      "name": "clean data"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "instagram-audit",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "09cb3be8-0eec-4ece-b73a-a2f6782aae01",
+      "name": "Webhook",
+      "webhookId": "5bf1192d-7bef-458a-b164-6e117d75056f"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2592,
+        -96
+      ],
+      "id": "d01a8e5f-3250-4051-89e5-578d92708766",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const posts = items.map(item => item.json);\n\n// ----------------------------------\n// 1. Calculate basic metrics\n// ----------------------------------\n\nconst processed = posts.map(post => {\n\n  const likes = Number(post.likes) || 0;\n  const comments = Number(post.comments) || 0;\n\n  const rawViews = post.views;\n\n  const views =\n    rawViews !== null &&\n    rawViews !== undefined &&\n    rawViews !== \"\" &&\n    Number(rawViews) > 0\n      ? Number(rawViews)\n      : null;\n\n  const engagement = likes + comments;\n\n  const engagementRate =\n    views !== null\n      ? Number(((engagement / views) * 100).toFixed(2))\n      : null;\n\n  return {\n    ...post,\n\n    likes,\n    comments,\n    views,\n    engagement,\n\n    engagement_rate: engagementRate,\n\n    engagement_rate_available:\n      engagementRate !== null\n  };\n});\n\n\n// ----------------------------------\n// 2. Get valid engagement rates\n// ----------------------------------\n\nconst validRates = processed\n  .filter(post => post.engagement_rate !== null)\n  .map(post => post.engagement_rate)\n  .sort((a, b) => a - b);\n\n\n// ----------------------------------\n// 3. Calculate percentile\n// ----------------------------------\n\nfunction percentile(value, values) {\n\n  if (!values.length) {\n    return null;\n  }\n\n  const belowOrEqual = values.filter(\n    v => v <= value\n  ).length;\n\n  return Number(\n    ((belowOrEqual / values.length) * 100).toFixed(1)\n  );\n}\n\n\n// ----------------------------------\n// 4. Add performance score\n// ----------------------------------\n\nconst finalPosts = processed.map(post => {\n\n  let performanceScore = null;\n  let performancePercentile = null;\n\n  if (post.engagement_rate !== null) {\n\n    performancePercentile =\n      percentile(\n        post.engagement_rate,\n        validRates\n      );\n\n    /*\n      Convert percentile into a 0–100 score.\n\n      0   = weakest\n      50  = around median\n      100 = strongest\n    */\n\n    performanceScore =\n      Math.round(performancePercentile);\n  }\n\n  return {\n    ...post,\n\n    performance_score:\n      performanceScore,\n\n    performance_percentile:\n      performancePercentile\n  };\n});\n\n\n// ----------------------------------\n// 5. Return original post structure\n// ----------------------------------\n\nreturn finalPosts.map(post => ({\n  json: post\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        -96
+      ],
+      "id": "c9fe9ee7-7c6f-4b8b-9afb-8ffa2f8155bf",
+      "name": "performance calculation"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Content Metrics": {
+      "main": [
+        [
+          {
+            "node": "rank the posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parse": {
+      "main": [
+        [
+          {
+            "node": "clean data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram URL Input": {
+      "main": [
+        [
+          {
+            "node": "Run an Actor and get dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run an Actor and get dataset": {
+      "main": [
+        [
+          {
+            "node": "normalize data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalize data": {
+      "main": [
+        [
+          {
+            "node": "Calculate Content Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rank the posts": {
+      "main": [
+        [
+          {
+            "node": "performance calculation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "complete data set": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "clean data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Instagram URL Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "performance calculation": {
+      "main": [
+        [
+          {
+            "node": "complete data set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "1e2f6413-5369-443c-be3b-6a148a955d0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2bbdbe8191f909090085a5c95af7dfad588bbcc32a63e07224266c22dd637e7c"
+  },
+  "nodeGroups": [],
+  "id": "PC347knfg5J8mDrX",
+  "tags": []
+}
