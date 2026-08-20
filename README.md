@@ -231,3 +231,40 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Backend Automation
+
+The backend of this Instagram Audit application is built with **n8n**, providing an end-to-end automation workflow that connects the frontend with Instagram data extraction and AI-powered analysis.
+
+### Workflow
+
+1. **Webhook Trigger** — Receives the Instagram username from the frontend.
+2. **Instagram Data Extraction** — Uses **Apify** to collect the required Instagram profile and content data.
+3. **Data Processing** — Processes and structures the collected data for analysis.
+4. **AI Analysis** — Uses **OpenAI** to analyze the Instagram data and generate actionable audit insights.
+5. **Audit Response** — Returns the generated audit results to the frontend.
+
+### Backend Architecture
+
+```text
+Frontend
+   │
+   │ POST Request
+   ▼
+n8n Production Webhook
+   │
+   ▼
+Apify
+   │
+   ▼
+Data Processing
+   │
+   ▼
+OpenAI
+   │
+   ▼
+Audit Results
+   │
+   ▼
+Frontend
+
