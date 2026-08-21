@@ -168,7 +168,7 @@ function Insights({ items }: { items: Insight[] }) {
           const high = it.importance === "high";
           const low = it.importance === "low";
           return (
-            <Reveal key={i} delay={i * 60} className={high ? "lg:col-span-2" : undefined}>
+            <Reveal key={i} delay={i * 60} className={high ? "lg:col-span-2" : ""}>
               <article
                 className={cn(
                   "panel hover-lift h-full px-6 py-6",

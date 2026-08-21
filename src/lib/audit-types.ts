@@ -397,14 +397,20 @@ export function normalizeAudit(input: unknown, fallbackUsername?: string): Audit
   const overview = pick(root, "account_overview", "overview", "account") ?? root;
   const quality = pick(root, "data_quality", "analysis_confidence", "confidence") ?? {};
   const research = pick(root, "platform_research", "instagram_research", "research") ?? {};
+  // Legacy workflow shape: { summary: { overall_performance, evidence_strength } }
+  const legacySummary = pick(root, "summary");
+  const legacyOverall = isRec(legacySummary) ? str(pick(legacySummary, "overall_performance")) : null;
+  const legacyEvidence = isRec(legacySummary) ? str(pick(legacySummary, "evidence_strength")) : null;
+  const rootLimitations = strList(pick(root, "limitations", "data_quality_issues"));
 
   const audit: Audit = {
     account: {
       username: str(pick(overview, "username", "handle", "account", "profile"))?.replace(/^@/, "") ?? fallbackUsername ?? null,
       niche: str(pick(overview, "niche", "category", "vertical")),
       overall_score: num(pick(overview, "overall_score", "score", "account_score", "performance_score")),
-      performance_label: str(pick(overview, "performance_label", "label", "verdict", "rating", "tier")),
-      summary: str(pick(overview, "summary", "ai_summary", "overall_summary", "description")),
+      performance_label:
+        str(pick(overview, "performance_label", "label", "verdict", "rating", "tier")) ?? legacyOverall,
+      summary: str(pick(overview, "ai_summary", "overall_summary", "description")) ?? legacyOverall,
       posts_analyzed: num(pick(overview, "posts_analyzed", "post_count", "posts")) ?? num(pick(quality, "posts_analyzed")),
       avatar: str(pick(overview, "avatar", "profile_pic_url", "profilePicUrl", "avatar_url")),
     },
@@ -424,8 +430,8 @@ export function normalizeAudit(input: unknown, fallbackUsername?: string): Audit
     data_quality: {
       posts_analyzed: num(pick(quality, "posts_analyzed", "post_count")),
       sufficient: bool(pick(quality, "sufficient_for_pattern_analysis", "sufficient", "is_sufficient")),
-      confidence: str(pick(quality, "confidence", "analysis_confidence", "level")),
-      limitations: strList(pick(quality, "limitations", "caveats", "notes")),
+      confidence: str(pick(quality, "confidence", "analysis_confidence", "level")) ?? legacyEvidence,
+      limitations: [...strList(pick(quality, "limitations", "caveats", "notes")), ...rootLimitations],
     },
   };
 
